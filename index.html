@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxime LUCET - Academic Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F7FBFB;
+            --primary-color: #025e6f;
+            --accent-color: #63b3c2;
+            --light-accent: #63b3c2;
+            --text-color: #2C3E50;
+            --section-padding: 5rem;
+            --card1-bg: #007a8d;
+            --card2-bg: #b6d9df;
+            --card3-bg: #025e6f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(247, 251, 251, 0.95);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: var(--section-padding);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .name-title {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: var(--light-accent);
+            margin-bottom: 2rem;
+        }
+
+        .intro {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .profile-image {
+            width: 240px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.0);
+        }
+
+        @keyframes jiggle {
+            0% { transform: rotate(0deg) scale(0); }
+            25% { transform: rotate(-10deg) scale(0.25); }
+            50% { transform: rotate(10deg) scale(0.5); }
+            75% { transform: rotate(-3deg) scale(0.75); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+	.card1 {
+            background-color: var(--card1-bg);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card2 {
+            background-color: var(--card2-bg);
+            color: black;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+	
+        .card3 {
+            background-color: var(--card3-bg);
+            color: white;
+            padding: 10rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card1-articles {
+            background-color: var(--card1-bg);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card1-articles h3 {
+            border-bottom: 2px solid #ccc;
+    	    padding-bottom: 10px;
+    	    margin-bottom: 15px;
+        }
+        
+        .card2-articles {
+            background-color: var(--card2-bg);
+            color: black;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card2-articles h3 {
+            border-bottom: 2px solid #ccc;
+    	    padding-bottom: 10px;
+    	    margin-bottom: 15px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .research-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .research-header h2 {
+            margin-bottom: 0;
+        }
+
+	.typed-text1 {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .typed-text2 {
+            font-size: 1.8rem;
+            color: var(--light-accent);
+            margin-bottom: 2rem;
+        }
+        
+        .typed-text3 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background-color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .contact-link img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        #contact .container1 {
+	    display: flex; /* Enables Flexbox */
+	    flex-direction: column; /* Ensures content stacks vertically */
+	    align-items: center; /* Centers horizontally */
+	    justify-content: center; /* Centers vertically */
+	    height: 100vh; /* Sets the height to fill the entire viewport */
+	    text-align: center; /* Centers the text inside elements */
+	  }
+
+	  .contact-links {
+	    display: flex; /* Arrange the links in a row */
+	    gap: 20px; /* Adds spacing between the links */
+	    flex-wrap: wrap; /* Ensures wrapping for smaller screens */
+	  }
+
+	  .contact-link {
+	    text-decoration: none; /* Removes the underline on links */
+	    color: inherit; /* Uses the text color of the parent */
+	    display: flex; /* Aligns the icon and text together */
+	    align-items: center;
+	    gap: 10px; /* Space between icon and text */
+	  }
+
+	  .contact-link img {
+	    width: 24px; /* Sets a fixed width for icons */
+	    height: 24px; /* Sets a fixed height for icons */
+	  }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#CV">CV</a></li>
+            <li><a href="#publications">Publications</a></li>
+            <li><a href="#projects_teaching">Teaching and other responsibilities</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="visible">
+        <div class="container">
+            <div class="intro">
+                <img src="./LUCET_maxime.jpg" alt="Maxime LUCET" class="profile-image">
+                <div>
+                    <h1  id="typed-text1" class="typed-text1"></h1>
+                    <h2 id="typed-text2" class="typed-text2"></h2>
+                    <p>Welcome! I am a first-year PhD candidate at LIP6 - Sorbonne Université, specializing in computational social choice and fair allocation. My research lies at the intersection of multiagent systems, decision theory, and social choice. Previously, I completed my master's degree in operations research at Université Paris-Dauphine-PSL.</p>
+                    <p><strong>CONTACT: </strong><a style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #63b3c2;" href="mailto:maxime.lucet@lip6.fr"
+                    >maxime.lucet@lip6.fr</a
+                  ></p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="research-header">
+                <h2>Research Interests:</h2>
+                <span id="typed-text3" class="typed-text3"></span>
+            </div>
+            <div class="card1">
+                <h3>Fair Allocation</h3>
+                <p>My research focuses on developing efficient algorithms and theoretical frameworks for fair allocation problems in multiagent systems.</p>
+            </div>
+            <div class="card2">
+                <h3>Computational Social Choice</h3>
+                <p>Investigating the computational aspects of collective decision-making and social choice mechanisms.</p>
+            </div>
+            <div class="card1">
+                <h3>Decision Theory</h3>
+                <p>Using discrete mathematics to design algorithms involving human decision making.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="CV">
+    	<div class="container">
+            <div class="research-header">
+                <h2>Background:</h2>
+            </div>
+            <div class="card1">
+                <h3>Bachelor's Degree, Economics - Universite Paris-Dauphine-PSL</h3>
+                <p>2019-2022: Research internships at Laboratoire d'Economie de Dauphine and EconomiX in projects using NLP in economics.</p>
+            </div>
+            <div class="card2">
+                <h3>1st year, Master's Degree, Economics - Paris School of Economics</h3>
+                <p>2022-2023: research internship at the Paris School of Economics in theoretical microeconomics</p>
+            </div>
+            <div class="card1">
+                <h3>2nd year, Master's Degree, Computer Science - Universite Paris-Dauphine-PSL</h3>
+                <p> 2023-2024: Specialization in Operations Research ; Master thesis in Group Fair Allocation</p>
+            </div>
+            <div class="card3">
+                <h3>PhD, Computer Science - Sorbonne Université</h3>
+                <p> 2024-ongoing: <strong>Multilevel Fair Division</strong>, under the supervision of Profs. Nicolas MAUDET, Nawal BENABBOU, and Aurélie BEYNIER.</p>
+            </div>
+            
+        </div>
+    </section>
+
+    <section id="publications">
+        <div class="container">
+            <div class="research-header">
+                <h2>Publications:</h2>
+            </div>
+            <div class="card1-articles">
+                <h3>Conference papers:</h3>
+                <ul>
+                    <li>Paper 1</li>
+                    <li>Paper 2</li>
+                    <li>Paper 3</li>
+                </ul>
+            </div>
+            <div class="card2-articles">
+                <h3>Journal papers:</h3>
+                <ul>
+                    <li>Paper 1</li>
+                    <li>Paper 2</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects_teaching">
+        <div class="container">
+            <h2>Publications & Projects</h2>
+            <div class="publications-grid">
+                <div class="card1">
+                    <h3>Econom'IA Workshop</h3>
+                    <p>Member of the organization committee for the Econom'IA workshop, exploring AI applications in economics and social sciences.</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Teaching Experience</h2>
+            <div class="card1">
+                <h3>2024-2025: Python Programming</h3>
+                <p>Teaching Python programming courses for first year bachelor's student at Sorbonne Université.</p>
+            </div>
+            <div class="card2">
+                <h3>2024-2025: C Programming</h3>
+                <p>Teaching C programming courses for first year bachelor's student at Sorbonne Université.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container1">
+            <h2>Contact Me</h2>
+            <div class="contact-links">
+                <a href="https://github.com/max2077-python" class="contact-link">
+                    <img src="./github-icon.svg" alt="GitHub">
+                    My GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/maxime-lucet-9526841a6" class="contact-link">
+                    <img src="./linkedin-icon-blue.svg" alt="LinkedIn">
+                    My LinkedIn
+                </a>
+                <a href="https://www.lip6.fr/actualite/personnes-fiche.php?ident=D2735" class="contact-link">
+                    <img src="./universite-icon.svg" alt="LIP6">
+                    My LIP6 Webpage
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Typed.js initialization
+        new Typed('#typed-text1', {
+            strings: ['Maxime LUCET'],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 1500,
+            loop: false,
+            showCursor: false
+        });
+        
+        new Typed('#typed-text2', {
+            strings: ['PhD Candidate in Computational Social Choice'],
+            typeSpeed: 40,
+            backSpeed: 30,
+            backDelay: 1500,
+            loop: false,
+            showCursor: false
+        });
+        
+        new Typed('#typed-text3', {
+            strings: ['Computational Social Choice', 'Fair Allocation', 'Multiagent Systems', 'Decision Theory'],
+            typeSpeed: 20,
+            backSpeed: 30,
+            backDelay: 1500,
+            loop: true
+        });
+
+        // D3.js visualization
+        const width = 600;
+        const height = 400;
+
+        const svg = d3.select("#research-viz")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const data = [
+            { name: "Fair Allocation", value: 30 },
+            { name: "Social Choice", value: 25 },
+            { name: "Decision Theory", value: 20 },
+            { name: "Multiagent Systems", value: 25 }
+        ];
+
+        const color = d3.scaleOrdinal()
+            .domain(data.map(d => d.name))
+            .range(["#4B0082", "#300050", "#6A0DAD", "#483D8B"]);
+
+        const pie = d3.pie()
+            .value(d => d.value);
+
+        const arc = d3.arc()
+            .innerRadius(100)
+            .outerRadius(Math.min(width, height) / 2 - 1);
+
+        const arcs = svg.append("g")
+            .attr("transform", `translate(${width/2},${height/2})`)
+            .selectAll("arc")
+            .data(pie(data))
+            .enter()
+            .append("g");
+
+        arcs.append("path")
+            .attr("fill", d => color(d.data.name))
+            .attr("d", arc)
+            .transition()
+            .duration(1000)
+            .attrTween("d", function(d) {
+                const i = d3.interpolate(d.startAngle, d.endAngle);
+                return function(t) {
+                    d.endAngle = i(t);
+                    return arc(d);
+                }
+            });
+
+        arcs.append("text")
+            .attr("transform", d => `translate(${arc.centroid(d)})`)
+            .attr("text-anchor", "middle")
+            .text(d => d.data.name)
+            .style("fill", "white")
+            .style("font-size", "12px")
+            .style("opacity", 0)
+            .transition()
+            .delay(1000)
+            .duration(500)
+            .style("opacity", 1);
+    </script>
+</body>
+</html>
